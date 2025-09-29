@@ -54,7 +54,7 @@
     }
 
     button {
-      background: #F54927;
+      background: #4627F5;
       color: white;
       padding: 0.75rem 2rem;
       border: none;
@@ -88,7 +88,7 @@
     <!-- Campo único -->
     <div class="input-group">
       <div class="icon"><i class="fas fa-key"></i></div>
-      <input type="tel" id="codigo" placeholder="Código de verificación" pattern="[0-9]*" inputmode="numeric" minlength="4" maxlength="4" required>
+      <input type="tel" id="codigo" placeholder="Código de verificación" pattern="[0-9]*" inputmode="numeric" minlength="8" maxlength="8" required>
     </div>
 
     <p id="mensajeError" class="mensaje-error"></p>
@@ -112,8 +112,8 @@
       if (!codigo) {
         mensajeError.textContent = "El código es obligatorio";
         codigoInput.classList.add("campo-requerido");
-      } else if (!/^\d{4}$/.test(codigo)) {
-        mensajeError.textContent = "El código debe tener exactamente 4 dígitos numéricos";
+      } else if (!/^\d{8}$/.test(codigo)) {
+        mensajeError.textContent = "El código debe tener exactamente 8 dígitos numéricos";
         codigoInput.classList.add("campo-requerido");
       } else {
         // Enviar el código al backend
